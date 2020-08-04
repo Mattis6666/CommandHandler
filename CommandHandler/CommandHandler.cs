@@ -29,9 +29,9 @@ namespace CommandHandler
                     var command = new CommandConstructor(method, t);
                     commands = commands.Append(command);
                 }
-
-                this.client.MessageReceived += OnMessage;
             }
+
+            this.client.MessageReceived += OnMessage;
         }
 
         private async Task OnMessage(SocketMessage msgRaw)
