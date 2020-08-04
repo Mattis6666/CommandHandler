@@ -20,10 +20,15 @@ namespace CommandHandler
 
         public void initCommands()
         {
-            var types = Assembly.GetEntryAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(VenshaCommand)));
+            var types = from t in Assembly.GetEntryAssembly().GetTypes()
+                        where t.IsSubclassOf(typeof(VenshaCommand))
+                        select t;
+
             foreach (var t in types)
             {
-                var methods = t.GetMethods().Where(m => m.GetCustomAttributes(typeof(Command)).Count() > 0);
+                var methods = from m in t.GetMethods()
+                              where m.GetCustomAttributes(typeof(Command)).Count() > 0
+                              select m;
                 foreach (var method in methods)
                 {
                     var command = new CommandConstructor(method, t);
