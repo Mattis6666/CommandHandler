@@ -40,7 +40,7 @@ namespace CommandHandler
             if (msg == null) return;
 
             if (!msg.Content.StartsWith(this.config.prefix)) return;
-            string[] args = msg.Content.Trim().Substring(this.config.prefix.Length).Split(' ', Int32.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+            string[] args = msg.Content.Trim().Substring(this.config.prefix.Length).Split(' ', int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
 
             string commandName = args.FirstOrDefault()?.ToLower();
             if (commandName == null) return;
@@ -49,7 +49,6 @@ namespace CommandHandler
             if (command == null) return;
 
             args = args.Skip(1).ToArray();
-            Console.WriteLine(string.Join("LOL", args));
 
             await command.callback(client, msgRaw, args);
         }
