@@ -14,10 +14,10 @@ namespace CommandHandler
         private MethodInfo method;
         private Type type;
 
-        public CommandConstructor(MethodInfo method, Type t)
+        public CommandConstructor(MethodInfo method, Type type)
         {
             this.method = method;
-            this.type = t;
+            this.type = type;
 
             var attrs = method.GetCustomAttributes();
             if (attrs.FirstOrDefault(x => x is Command) as Command == null) throw new Exception("How did this happen?");
@@ -40,10 +40,10 @@ namespace CommandHandler
         }
         public Task callback(params object[] args)
         {
-            var constructor = type.GetConstructor(Type.EmptyTypes);
+            var constructor = this.type.GetConstructor(Type.EmptyTypes);
             var cmd = constructor.Invoke(new object[] { });
 
-            return method.Invoke(cmd, args) as Task;
+            return this.method.Invoke(cmd, args) as Task;
         }
     }
 

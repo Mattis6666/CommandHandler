@@ -25,8 +25,8 @@ namespace CommandHandler
             await client.LoginAsync(TokenType.Bot, config.token);
             await client.StartAsync();
 
-            var commands = new CommandHandler(client, config);
-            commands.initCommands();
+            var commands = new CommandHandler(client, config, Log);
+            commands.InitCommands();
 
             await Task.Delay(-1);
         }
