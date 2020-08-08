@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 
-namespace CommandHandler
+namespace Vensha
 {
     public class CommandConstructor
     {

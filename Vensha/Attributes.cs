@@ -1,6 +1,6 @@
 using System;
 
-namespace CommandHandler
+namespace Vensha
 {
 
     public class Command : Attribute

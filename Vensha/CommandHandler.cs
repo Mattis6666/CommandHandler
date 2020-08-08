@@ -6,20 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using msg = Discord.LogMessage;
 
-namespace CommandHandler
+namespace Vensha
 {
     public class CommandHandler
     {
         private IEnumerable<CommandConstructor> commands = new List<CommandConstructor>();
-        private DiscordSocketClient client;
-        private Func<msg, Task> Log;
-        private Config config;
+        private VenshaClient client;
 
-        public CommandHandler(DiscordSocketClient client, Config config, Func<msg, Task> log)
+        public CommandHandler(VenshaClient client)
         {
             this.client = client;
-            this.config = config;
-            this.Log = log;
         }
 
         public void InitCommands()
@@ -41,7 +37,7 @@ namespace CommandHandler
                 }
             }
 
-            this.Log(new msg(Discord.LogSeverity.Info, "CommandHandler", "Commands successfully initiated!"));
+            this.client.LogInfo(new msg(Discord.LogSeverity.Info, "CommandHandler", "Commands successfully initiated!"));
             this.client.MessageReceived += OnMessage;
         }
 
@@ -50,10 +46,10 @@ namespace CommandHandler
             var msg = msgRaw as SocketUserMessage;
             if (msg == null) return;
 
-            if (!msg.Content.StartsWith(this.config.prefix)) return;
+            if (!msg.Content.StartsWith(this.client.config.prefix)) return;
             string[] args = msg.Content
                                 .Trim()
-                                .Substring(this.config.prefix.Length)
+                                .Substring(this.client.config.prefix.Length)
                                 .Split(' ', int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
 
             string commandName = args.FirstOrDefault()?.ToLower();

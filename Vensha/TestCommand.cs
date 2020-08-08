@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 
-namespace CommandHandler
+namespace Vensha
 {
     public class TestCommand : VenshaCommand
     {
