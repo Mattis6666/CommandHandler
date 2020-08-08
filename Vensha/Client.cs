@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace Vensha
             this.Log += this.LogInfo;
             this.config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/config.json"));
 
-            var commands = new CommandHandler(this);
-            commands.InitCommands();
+            Program.commandHandler = new CommandHandler.Handler(this);
+            Program.commandHandler.InitCommands();
 
             this.Init();
         }
@@ -39,5 +40,6 @@ namespace Vensha
     {
         public string token { get; set; }
         public string prefix { get; set; }
+        public HashSet<ulong> owners { get; set; }
     }
 }

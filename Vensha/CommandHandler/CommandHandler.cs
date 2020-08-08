@@ -1,19 +1,19 @@
-using System.Threading.Tasks;
 using System;
-using System.Reflection;
-using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Discord.WebSocket;
 using msg = Discord.LogMessage;
 
-namespace Vensha
+namespace Vensha.CommandHandler
 {
-    public class CommandHandler
+    public class Handler
     {
         private IEnumerable<CommandConstructor> commands = new List<CommandConstructor>();
         private VenshaClient client;
 
-        public CommandHandler(VenshaClient client)
+        public Handler(VenshaClient client)
         {
             this.client = client;
         }
@@ -37,7 +37,7 @@ namespace Vensha
                 }
             }
 
-            this.client.LogInfo(new msg(Discord.LogSeverity.Info, "CommandHandler", "Commands successfully initiated!"));
+            this.client.LogInfo(new msg(Discord.LogSeverity.Info, "CommandHandler", "Commands successfully initialised!"));
             this.client.MessageReceived += OnMessage;
         }
 
@@ -48,17 +48,32 @@ namespace Vensha
 
             if (!msg.Content.StartsWith(this.client.config.prefix)) return;
             string[] args = msg.Content
-                                .Trim()
-                                .Substring(this.client.config.prefix.Length)
-                                .Split(' ', int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+                .Trim()
+                .Substring(this.client.config.prefix.Length)
+                .Split(' ', int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
 
             string commandName = args.FirstOrDefault()?.ToLower();
             if (commandName == null) return;
 
-            var command = this.commands.FirstOrDefault(c => c.name == commandName || c.aliases.Contains(commandName));
+            var command = this.GetCommand(commandName);
             if (command == null) return;
 
-            await command.callback(client, msgRaw, args.Skip(1).ToArray());
+            foreach (var attr in command.attributes.Where(a => a is BaseAttribute))
+            {
+                if (!(await this.CheckCondition(msg, attr as BaseAttribute))) return;
+            }
+
+            await command.callback(new CommandContext(client, msg, args));
+        }
+
+        public CommandConstructor? GetCommand(string name) => this.commands.FirstOrDefault(c => c.name == name || c.aliases.Contains(name));
+
+        private async Task<bool> CheckCondition(SocketUserMessage msg, BaseAttribute attr)
+        {
+            if (attr.test(msg)) return true;
+
+            if (attr.error != null) await msg.Channel.SendMessageAsync(attr.error);
+            return false;
         }
     }
 }
