@@ -33,7 +33,7 @@ namespace Vensha.CommandHandler
                 switch (attr)
                 {
                     case Command c:
-                        if (Program.commandHandler.GetCommand(this.name) != null)
+                        if (Program.CommandHandler.GetCommand(this.name) != null)
                         {
                             System.Console.WriteLine($"Duplicate command {this.name}");
                             Environment.Exit(1);
@@ -60,7 +60,7 @@ namespace Vensha.CommandHandler
         }
         public Task callback(CommandContext ctx)
         {
-            var cmd = this.type.GetConstructor(new Type[0]).Invoke(null);
+            var cmd = this.type.GetConstructor(Type.EmptyTypes).Invoke(null);
 
             (cmd as VenshaCommand).Inject(ctx);
 

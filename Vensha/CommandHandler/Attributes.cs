@@ -32,7 +32,7 @@ namespace Vensha.CommandHandler
 
     public class OwnerOnly : BaseAttribute
     {
-        public OwnerOnly() : base((SocketUserMessage msg) => Program.instance.config.owners.Contains(msg.Author.Id), null) { }
+        public OwnerOnly() : base((SocketUserMessage msg) => Program.Instance.config.owners.Contains(msg.Author.Id), null) { }
     }
 
     public class BaseAttribute : Attribute

@@ -17,8 +17,8 @@ namespace Vensha
             this.Log += this.LogInfo;
             this.config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/config.json"));
 
-            Program.commandHandler = new CommandHandler.Handler(this);
-            Program.commandHandler.InitCommands();
+            Program.CommandHandler = new CommandHandler.Handler(this);
+            Program.CommandHandler.InitCommands();
 
             this.Init();
         }
